@@ -1,5 +1,5 @@
 from sqlalchemy import  Column, Integer, String, Boolean, Float
-from config import Base
+from .config import Base
 
 class Passengers(Base):
     __tablename__ ="passengers"

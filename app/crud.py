@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import Passengers
-from schemas import PassengerSchema
+from .models import Passengers
+from .schemas import PassengerSchema
 
 
 def get_passengers(db: Session, skip: int = 0, limit: int = 100):

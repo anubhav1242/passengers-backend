@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Form, File, UploadFile
-from . import models
-from .routes import router
-from .config import engine
+import models
+from routes import router
+from config import engine
 from typing import Annotated
 
 models.Base.metadata.create_all(bind=engine)

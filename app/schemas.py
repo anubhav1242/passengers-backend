@@ -6,7 +6,7 @@ T = TypeVar('T')
 
 
 class PassengerSchema(BaseModel):
-    id: int = None
+    PassengerId: int = None
     Survived: Optional[bool] = None
     Pclass: Optional[int] = None
     Name: Optional[str] = None

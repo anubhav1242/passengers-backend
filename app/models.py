@@ -1,10 +1,10 @@
 from sqlalchemy import  Column, Integer, String, Boolean, Float
-from .config import Base
+from config import Base
 
 class Passengers(Base):
     __tablename__ ="passengers"
 
-    id = Column(Integer, primary_key=True, index=True)
+    PassengerId = Column(Integer, primary_key=True, index=True)
     Survived = Column(Boolean(), default = True)
     Pclass = Column(Integer)
     Name = Column(String, nullable = False)

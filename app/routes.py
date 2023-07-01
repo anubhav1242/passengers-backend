@@ -1,10 +1,12 @@
 from fastapi import APIRouter, HTTPException, Path, Form, UploadFile
 from fastapi import Depends
-from .config import SessionLocal
+from config import SessionLocal
 from sqlalchemy.orm import Session
-from .schemas import PassengerSchema, Request, Response, RequestPassenger
+from schemas import PassengerSchema, Request, Response, RequestPassenger
 from typing import Annotated
-from . import crud
+import crud
+import csv
+from models import Passengers
 
 router = APIRouter()
 
@@ -25,10 +27,10 @@ async def create_passenger_service(request: RequestPassenger, db: Session = Depe
                     message="Passenger created successfully").dict(exclude_none=True)
 
 
-@router.get('/{id}')
-async def get_passenger_by_id(id: int, skip: int = 0, limit: int = 500, db: Session = Depends(get_db)):
-    print("Get passenger by id ", id)
-    _passengers = crud.get_passenger_by_id(db, passenger_id=id)
+@router.get('/{PassengerId}')
+async def get_passenger_by_id(PassengerId: int, skip: int = 0, limit: int = 500, db: Session = Depends(get_db)):
+    print("Get passenger by id ", PassengerId)
+    _passengers = crud.get_passenger_by_id(db, passenger_id=PassengerId)
     return Response(status="Ok", code="200", message="Success fetch all data", result=_passengers)
 
 @router.get("/")
@@ -45,7 +47,7 @@ async def update_passenger(request: RequestPassenger, db: Session = Depends(get_
 
 @router.delete("/delete")
 async def delete_passenger(request: RequestPassenger,  db: Session = Depends(get_db)):
-    crud.remove_passenger(db, passenger_id=request.parameter.id)
+    crud.remove_passenger(db, passenger_id=request.parameter.PassengerId)
     return Response(status="Ok", code="200", message="Success delete data").dict(exclude_none=True)
 
 
@@ -61,3 +63,18 @@ async def create_upload_file(csvfile: UploadFile | None = None):
     else:
         return Response(status="Not ok", code="415", message="Please upload a csv file")
         
+@router.post("/load_csv")
+def load_csv(file: UploadFile, db: Session = Depends(get_db)):
+    decoded_file = file.file.read().decode("utf-8").splitlines()
+
+    reader = csv.DictReader(decoded_file)
+    next(reader)
+    data = list(next(reader))
+
+    for row in data:
+        record = Passengers(**row)
+        db.add(record)
+
+    db.commit()
+
+    return {"message": "CSV data loaded successfully"}

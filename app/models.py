@@ -4,7 +4,7 @@ from config import Base
 class Passengers(Base):
     __tablename__ ="passengers"
 
-    PassengerId = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     Survived = Column(Boolean(), default = True)
     Pclass = Column(Integer)
     Name = Column(String, nullable = False)

@@ -27,10 +27,10 @@ async def create_passenger_service(request: RequestPassenger, db: Session = Depe
                     message="Passenger created successfully").dict(exclude_none=True)
 
 
-@router.get('/{PassengerId}')
+@router.get('/{id}')
 async def get_passenger_by_id(PassengerId: int, skip: int = 0, limit: int = 500, db: Session = Depends(get_db)):
     print("Get passenger by id ", PassengerId)
-    _passengers = crud.get_passenger_by_id(db, passenger_id=PassengerId)
+    _passengers = crud.get_passenger_by_id(db, passenger_id=id)
     return Response(status="Ok", code="200", message="Success fetch all data", result=_passengers)
 
 @router.get("/")

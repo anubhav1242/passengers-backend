@@ -7,7 +7,7 @@ def get_passengers(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Passengers).offset(skip).limit(limit).all()
 
 def get_passenger_by_id(db: Session, passenger_id: int):
-    passenger = db.query(Passengers).filter(Passengers.PassengerId == passenger_id).first()
+    passenger = db.query(Passengers).filter(Passengers.id == passenger_id).first()
     print(passenger)
     return passenger
 

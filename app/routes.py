@@ -2,14 +2,13 @@ from fastapi import APIRouter, HTTPException, Path, Form, UploadFile
 from fastapi import Depends
 from config import SessionLocal
 from sqlalchemy.orm import Session
-from schemas import PassengerSchema, Request, Response, RequestPassenger
+from schemas import PassengerSchema, Request, Response, RequestPassenger, ItemCreate, Item
 from typing import Annotated
 import crud
 import csv
 from models import Passengers
 
 router = APIRouter()
-
 
 def get_db():
     db = SessionLocal()
@@ -30,7 +29,7 @@ async def create_passenger_service(request: RequestPassenger, db: Session = Depe
 @router.get('/{id}')
 async def get_passenger_by_id(PassengerId: int, skip: int = 0, limit: int = 500, db: Session = Depends(get_db)):
     print("Get passenger by id ", PassengerId)
-    _passengers = crud.get_passenger_by_id(db, passenger_id=id)
+    _passengers = crud.get_passenger_by_id(db, passenger_id=PassengerId)
     return Response(status="Ok", code="200", message="Success fetch all data", result=_passengers)
 
 @router.get("/")
@@ -47,7 +46,7 @@ async def update_passenger(request: RequestPassenger, db: Session = Depends(get_
 
 @router.delete("/delete")
 async def delete_passenger(request: RequestPassenger,  db: Session = Depends(get_db)):
-    crud.remove_passenger(db, passenger_id=request.parameter.PassengerId)
+    crud.remove_passenger(db, passenger_id=request.parameter.id)
     return Response(status="Ok", code="200", message="Success delete data").dict(exclude_none=True)
 
 
@@ -78,3 +77,24 @@ def load_csv(file: UploadFile, db: Session = Depends(get_db)):
     db.commit()
 
     return {"message": "CSV data loaded successfully"}
+
+
+@router.post("/upload")
+async def upload_file(file: UploadFile | None = None):
+    db = SessionLocal()
+
+    contents = await file.read()
+    lines = contents.decode().split("\n")
+
+    # lines = [line for line in lines if line]
+
+    for line in lines:
+        columns = line.split(",")
+        item = ItemCreate(id=columns[0], Survived=columns[1], Pclass=columns[2], Name=columns[3], Sex=columns[4], Age=columns[5], SibSp=columns[6], Parch=columns[7], Ticket=columns[8], Fare=columns[9], Cabin=columns[10], Embarked=columns[11])
+        db_item = Item(**item.dict())
+        db.add(db_item)
+
+    db.commit()
+    db.close()
+
+    return {"message": "CSV file uploaded successfully"}

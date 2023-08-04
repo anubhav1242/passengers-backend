@@ -12,7 +12,7 @@ def get_passenger_by_id(db: Session, passenger_id: int):
     return passenger
 
 def create_passenger(db: Session, passengers: PassengerSchema):
-    _passengers = Passengers(Survived=passengers.Survived, Pclass=passengers.Pclass, Name=passengers.Name, Sex=passengers.Sex, Age=passengers.Age, SibSp=passengers.SibSp, Parch=passengers.Parch, Ticket=passengers.Ticket, Fare=passengers.Fare, Cabin=passengers.Cabin, Embarked=passengers.Embarked)
+    _passengers = Passengers(id=passengers.id, Survived=passengers.Survived, Pclass=passengers.Pclass, Name=passengers.Name, Sex=passengers.Sex, Age=passengers.Age, SibSp=passengers.SibSp, Parch=passengers.Parch, Ticket=passengers.Ticket, Fare=passengers.Fare, Cabin=passengers.Cabin, Embarked=passengers.Embarked)
     db.add(_passengers)
     db.commit()
     db.refresh(_passengers)
@@ -23,7 +23,7 @@ def remove_passenger(db: Session, passenger_id: int):
     db.delete(_passengers)
     db.commit()
 
-def update_passenger(db: Session, passenger_id: int, Survived: bool, Pclass: int, Name: str, Sex: str, Age: float, SibSp: int, Parch: int, Ticket: str, Fare: float, Cabin: str, Embarked: str):
+def update_passenger(db: Session, passenger_id: int, Survived: str, Pclass: str, Name: str, Sex: str, Age: str, SibSp: str, Parch: str, Ticket: str, Fare: str, Cabin: str, Embarked: str):
     _passengers = get_passenger_by_id(db=db, passenger_id=passenger_id)
 
     _passengers.Survived = Survived

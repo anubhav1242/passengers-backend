@@ -1,18 +1,18 @@
-from sqlalchemy import  Column, Integer, String, Boolean, Float
+from sqlalchemy import  Column, Integer, String
 from config import Base
 
 class Passengers(Base):
-    __tablename__ ="passengers"
+    __tablename__ ="passengers3"
 
     id = Column(Integer, primary_key=True, index=True)
-    Survived = Column(Boolean(), default = True)
-    Pclass = Column(Integer)
+    Survived = Column(String)
+    Pclass = Column(String)
     Name = Column(String, nullable = False)
     Sex = Column(String, nullable = False)
-    Age = Column(Float)
-    SibSp = Column(Integer)
-    Parch = Column(Integer)
+    Age = Column(String)
+    SibSp = Column(String)
+    Parch = Column(String)
     Ticket = Column(String)
-    Fare = Column(Float)
+    Fare = Column(String)
     Cabin = Column(String)
     Embarked = Column(String)

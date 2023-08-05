@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
 from config import SessionLocal, engine
 from sqlalchemy.orm import Session
 from schemas import Response, RequestPassenger
@@ -54,8 +54,10 @@ async def delete_passenger(request: RequestPassenger,  db: Session = Depends(get
 
 @router.post("/uploadcsv/")
 async def create_upload_file(file: UploadFile = File(...)):
-    df = pd.read_csv(io.StringIO((await file.read()).decode('utf-8')))
-    df.to_sql('passengers3', engine, if_exists='append', index=False)
-
-    return {"filename": file.filename}
-
+    try:
+        df = pd.read_csv(io.StringIO((await file.read()).decode('utf-8')))
+        df.to_sql('passengers3', engine, if_exists='append', index=False)
+        return {"filename": file.filename}
+    except Exception as e:
+        # Catch other unexpected exceptions and raise a generic error
+        raise HTTPException(status_code=200, detail="Invalid CSV Format")

@@ -25,35 +25,6 @@ class PassengerSchema(BaseModel):
     class Config:
         orm_mode = True
 
-class Item(Base):
-    __tablename__ = "passengers"
-    id = Column(Integer, primary_key=True, index=True)
-    Survived = Column(String)
-    Pclass = Column(String)
-    Name = Column(String)
-    Sex = Column(String)
-    Age = Column(String)
-    SibSp = Column(String)
-    Parch = Column(String)
-    Ticket = Column(String)
-    Fare = Column(String)
-    Cabin = Column(String)
-    Embarked = Column(String)
-
-class ItemCreate(BaseModel):
-    id: int
-    Survived: Optional[str] 
-    Pclass: Optional[str] 
-    Name: Optional[str] 
-    Sex: Optional[str] 
-    Age: Optional[str] 
-    SibSp: Optional[str] 
-    Parch: Optional[str] 
-    Ticket: Optional[str] 
-    Fare: Optional[str] 
-    Cabin: Optional[str] 
-    Embarked: Optional[str] 
-
 class Request(GenericModel, Generic[T]):
     parameter: Optional[T] = Field(...)
 

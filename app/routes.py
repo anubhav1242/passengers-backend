@@ -2,7 +2,6 @@ from fastapi import APIRouter, UploadFile, File, Depends
 from config import SessionLocal, engine
 from sqlalchemy.orm import Session
 from schemas import Response, RequestPassenger
-from typing import Annotated
 import crud
 import io
 import pandas as pd
